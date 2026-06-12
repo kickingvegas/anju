@@ -476,6 +476,18 @@ Auto rescan `imenu-auto-rescan' is enabled for all affected modes."
      :visible defining-kbd-macro
      :help "Insert current value of ‘kmacro-counter’, then increment it by ARG"]
 
+    [kmacro-set-format
+     kmacro-set-format
+     :label "Set counter format…"
+     :visible defining-kbd-macro
+     :help "Set the format of ‘kmacro-counter’ to FORMAT"]
+
+    [kbd-macro-query
+     kbd-macro-query
+     :label "Query user"
+     :visible defining-kbd-macro
+     :help "Query user during kbd macro execution"]
+
     [kmacro-end-and-call-macro
      kmacro-end-and-call-macro
      :label "Run last"

@@ -1095,6 +1095,11 @@ Keyboard macros offer workflow automation in Emacs in a ``no-code'' fashion.  An
 
 Note that both keystroke and mouse menu actions can be recorded by a keyboard macro.
 
+When recording a keyboard macro@comma{} the menu is modified to provide access to counter and query user (prompt) commands.
+
+@image{images/anju-kmacro-menu-recording,,,,png}
+
+
 For more reading on keyboard macros@comma{} see @ref{Keyboard Macros,,,emacs,}.
 
 @node Help Menu Features

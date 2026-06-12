@@ -553,7 +553,7 @@ leaving just one")
   (anju-test-keymap
    kmap
    "Macro Recorder"
-   11
+   13
    (lambda (items)
      (let ((i 0))
        (anju-test-menu-item
@@ -573,6 +573,18 @@ leaving just one")
         "Insert counter"
         #'kmacro-insert-counter
         "Insert current value of ‘kmacro-counter’, then increment it by ARG")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Set counter format…"
+        #'kmacro-set-format
+        "Set the format of ‘kmacro-counter’ to FORMAT")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Query user"
+        #'kbd-macro-query
+        "Query user during kbd macro execution")
 
        (anju-test-menu-item
         (seq-elt items (cl-incf i))
