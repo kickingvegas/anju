@@ -848,15 +848,30 @@ The context predicate can be embedded in the menu item definition itself. See mo
 
 It is up to the implementer to determine where to best define and apply the context predicate.
 
-#+TEXINFO: @subheading Customizing context-menu-functions
+*** Customizing context-menu-functions
+#+CINDEX: Customizing context-menu-functions
+#+VINDEX: context-menu-functions
+
+[[file:images/anju-context-menu-customize.png]]
 
 It is recommended to use the ~customize-variable~ command to configure ~context-menu-functions~ instead of using ~add-hook~ for the following reasons:
 
-1. A visual UI is provided showing what choices for built-in context menu functions are available.
-2. Users can insert their own custom function.
-3. Top-down ordering of functions will similarly determine the order of menu items in the context menu.
+- A visual UI is provided showing what choices for built-in context menu functions are available.
+   
+  - Anju modifies the choice selection to include Anju-defined context menu functions.
+     
+- Users can insert their own custom function.
+   
+- Top-down ordering of functions will similarly determine the order of menu items in the context menu.
+
+
+Learn more about the context menu functions provided by Anju in the section [[#anju-context-menu-functions][Anju Context Menu Functions]].
 
 *** Anju Context Menu Functions
+:PROPERTIES:
+:CUSTOM_ID: anju-context-menu-functions
+:END:
+#+CINDEX: Anju Context Menu Functions
 #+VINDEX: anju-context-menu-dired
 #+VINDEX: anju-context-menu-org-mode
 #+VINDEX: anju-context-menu-make-mode

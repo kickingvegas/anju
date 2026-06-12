@@ -53,6 +53,57 @@
 ;; )
 
 
+;;; Context Menu Function Inventory
+
+(defvar anju-test-context-menu--inventory
+  '(anju-context-menu-dired
+    anju-context-menu-org-mode
+    anju-context-menu-info-mode
+    anju-context-menu-make-mode
+    anju-context-menu-compile
+    anju-context-menu-elisp
+    anju-context-menu-edebug-eval
+    anju-context-menu-scratch
+    anju-context-menu-buffers
+    anju-context-menu-region
+    anju-context-menu-dictionary
+    anju-context-menu-narrow
+    anju-context-menu-open-in
+    anju-context-menu-vc
+    anju-context-menu-markup
+    anju-context-menu-wordcount
+    anju-context-menu-rectangle
+    anju-context-menu-window
+    anju-context-menu-region-extension)
+  "Control inventory list of context menu functions.")
+
+(ert-deftest test-anju-context-menu--inventory ()
+  "Test for `anju-context-menu--inventory'."
+  (let* ((inventory anju-test-context-menu--inventory)
+         (count (length inventory)))
+
+    (mapc (lambda (x)
+            (should (seq-contains-p anju-context-menu--inventory x)))
+          inventory)
+
+    (should (= count (length anju-context-menu--inventory)))))
+
+
+(ert-deftest test-anju-extend-context-menu-functions-options ()
+  "Test for `anju-extend-context-menu-functions-options'."
+
+  (anju-extend-context-menu-functions-options anju-context-menu--inventory)
+
+  (let* ((inventory anju-test-context-menu--inventory)
+         (count (length inventory)))
+    (mapc (lambda (fn)
+            (let* ((current-type (get 'context-menu-functions 'custom-type))
+                   (function-items (cdr (nth 1 current-type)))
+                   (item `(function-item ,fn)))
+              (should (seq-contains-p function-items item))))
+          inventory)))
+
+
 ;; -------------------------------------------------------------------
 ;; Context Menu: Region Extension
 
