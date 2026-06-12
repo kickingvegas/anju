@@ -1639,31 +1639,61 @@ function into `context-menu-functions' over `add-hook'."
     (setq s (remove target s))
     (setq-default context-menu-functions s)))
 
+(defvar anju-context-menu--inventory
+  '(anju-context-menu-dired
+    anju-context-menu-org-mode
+    anju-context-menu-info-mode
+    anju-context-menu-make-mode
+    anju-context-menu-compile
+    anju-context-menu-elisp
+    anju-context-menu-edebug-eval
+    anju-context-menu-scratch
+    anju-context-menu-buffers
+    anju-context-menu-region
+    anju-context-menu-dictionary
+    anju-context-menu-narrow
+    anju-context-menu-open-in
+    anju-context-menu-vc
+    anju-context-menu-markup
+    anju-context-menu-wordcount
+    anju-context-menu-rectangle
+    anju-context-menu-window
+    anju-context-menu-region-extension)
+  "Inventory of all Anju-defined context menu functions.
+
+These functions are intended to be used in `context-menu-functions'.")
+
+
+(defun anju-extend-context-menu-functions-options (inventory)
+  "Extend `context-menu-functions' options with INVENTORY.
+
+This function is idempotent insofar as to not duplicate choice entries
+from INVENTORY into `context-menu-functions'."
+  (mapc (lambda (fn)
+          (let* ((current-type (get 'context-menu-functions 'custom-type))
+                 (base-choices (cdr (nth 1 current-type)))
+                 (new-choice `(function-item ,fn)))
+            (if (not (seq-contains-p base-choices new-choice)) ; make idempotent
+                (put 'context-menu-functions 'custom-type
+                     `(repeat (choice ,@base-choices ,new-choice))))))
+        inventory))
+
 (defun anju-reconfigure-context-menu-functions ()
   "Reconfigure `context-menu-functions'."
   (interactive)
+  (anju-extend-context-menu-functions-options anju-context-menu--inventory)
+
   (when (not (get 'context-menu-functions 'saved-value))
-    (mapc (lambda (fn)
+    (let ((inventory (seq-remove
+                      (lambda (fn)
+                        (eq fn #'anju-context-menu-region-extension))
+                      (reverse anju-context-menu--inventory))))
+
+
+     (mapc (lambda (fn)
             (if (not (member fn context-menu-functions))
                 (add-hook 'context-menu-functions fn)))
-          (reverse '(anju-context-menu-dired
-                     anju-context-menu-org-mode
-                     anju-context-menu-info-mode
-                     anju-context-menu-make-mode
-                     anju-context-menu-compile
-                     anju-context-menu-elisp
-                     anju-context-menu-edebug-eval
-                     anju-context-menu-scratch
-                     anju-context-menu-buffers
-                     anju-context-menu-region
-                     anju-context-menu-dictionary
-                     anju-context-menu-narrow
-                     anju-context-menu-open-in
-                     anju-context-menu-vc
-                     anju-context-menu-markup
-                     anju-context-menu-wordcount
-                     anju-context-menu-rectangle
-                     anju-context-menu-window))))
+           inventory)))
 
   (if (member #'context-menu-middle-separator context-menu-functions)
       (anju-context-menu--insert-into-context-menu-functions #'anju-context-menu-region-extension
@@ -1680,25 +1710,7 @@ function into `context-menu-functions' over `add-hook'."
   (interactive)
   (mapc (lambda (fn)
           (anju-context-menu--remove-from-context-menu-functions fn))
-        (reverse '(anju-context-menu-dired
-                   anju-context-menu-org-mode
-                   anju-context-menu-info-mode
-                   anju-context-menu-make-mode
-                   anju-context-menu-compile
-                   anju-context-menu-elisp
-                   anju-context-menu-edebug-eval
-                   anju-context-menu-scratch
-                   anju-context-menu-buffers
-                   anju-context-menu-narrow
-                   anju-context-menu-open-in
-                   anju-context-menu-region-extension
-                   anju-context-menu-vc
-                   anju-context-menu-rectangle
-                   anju-context-menu-dictionary
-                   anju-context-menu-region
-                   anju-context-menu-markup
-                   anju-context-menu-wordcount
-                   anju-context-menu-window))))
+        (reverse anju-context-menu--inventory)))
 
 (provide 'anju-context-menu)
 ;;; anju-context-menu.el ends here
