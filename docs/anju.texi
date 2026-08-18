@@ -20,7 +20,7 @@ Copyright © 2026 Charles Y@. Choi
 @finalout
 @titlepage
 @title Anju User Guide
-@subtitle for version 1.8.1
+@subtitle for version 1.8.2-rc.1
 @author Charles Y@. Choi (@email{kickingvegas@@gmail.com})
 @page
 @vskip 0pt plus 1filll
@@ -33,7 +33,7 @@ Copyright © 2026 Charles Y@. Choi
 @node Top
 @top Anju User Guide
 
-Version: 1.8.1
+Version: 1.8.2-rc.1
 
 Copyright © 2026 @w{Charles Y. Choi}
 
