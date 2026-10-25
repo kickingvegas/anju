@@ -781,6 +781,26 @@ For experienced users, the "Emacs Tutorial" menu items can be removed via the cu
 
 Window management via mouse interaction is provided for through the [[#mode-line][mode line]] and [[#context-menu][context menu]]. More detail is provided in those sections.
 
+** Mouse Binding Changes
+#+CINDEX: Mouse Binding Changes
+
+Anju makes the following changes to the default mouse bindings set in Emacs:
+
+- Removes most bindings involving the middle mouse button ({{{kbd(<mouse-2>)}}}).
+
+- Removes mouse bindings related to secondary selection ([[info:emacs#Secondary Selection]]).
+
+- Change selection and open behavior in application-like modes.
+
+  By default, built-in Emacs modes treat their content as a hypertext document, where a single click {{{kbd(<mouse-1>)}}} on a link is treated as an open action. This results in surprise for modes whose content is more akin to an application. For applications, a single-click  event is treated as a selection action and a double-click {{{kbd(<mouse-1>)}}} event is treated as an open action.
+
+  Modes reconfigured to support application-like behavior are:
+
+   - ~dired-mode~
+   - ~ibuffer-mode~
+   - ~bookmark-bmenu-mode~
+
+  In addition, mark toggling is bound to {{{kbd(M-<mouse-1>)}}} for modes which display a list of items.
 
 * Requirements
 #+CINDEX: Requirements
@@ -854,24 +874,46 @@ Customization options for the different areas Anju covers are detailed below.
 #+VINDEX: anju-reconfigure-main-menu-enable
 #+VINDEX: anju-help-menu-remove-emacs-tutorial
 #+VINDEX: anju-reconfigure-main-menu-hook
+#+VINDEX: anju-reconfigure-mouse-per-modes-enable
 
 Anju has a number of customizable variables that determine the behavior of ~anju-init~. They are:
 
-- ~anju-reconfigure-context-menu-functions-enable~ :: Enable reconfiguration of the variable ~context-menu-functions~ with Anju-defined menu functions.
+- ~anju-reconfigure-context-menu-functions-enable~ ::
+  Enable reconfiguration of the variable ~context-menu-functions~ with Anju-defined menu functions.
 
   If ~context-menu-functions~ is previously set via ~customize-variable~ then ~anju-init~ will make no changes to ~context-menu-functions~ regardless of how  ~anju-reconfigure-context-menu-functions-enable~ is set.
 
-- ~anju-mode-line-bindings-enable~ :: Enable Anju-defined bindings for the mode line.
+- ~anju-mode-line-bindings-enable~ ::
+  Enable Anju-defined bindings for the mode line.
 
-- ~anju-unset-legacy-mouse-bindings-enable~ :: Remove bindings using ~mouse-2~ and for secondary selection.
+- ~anju-unset-legacy-mouse-bindings-enable~ ::
+  Remove bindings using ~mouse-2~ and for secondary selection.
 
-- ~anju-reconfigure-main-menu-enable~ :: Top-level variable to reconfigure the main menu.
+- ~anju-reconfigure-mouse-per-modes-enable~ ::
+  Run mode-specific hooks to customize their mouse behavior.
+
+  Anju distinguishes modes whose content is treated as a hypertext document with those whose content is more akin to an application. For the latter, a single-click {{{kbd(<mouse-1>)}}} event is treated as a selection action and a double-click {{{kbd(<mouse-1>)}}} event is treated as an open action.
+
+  In addition, mark toggling is bound to {{{kbd(M-<mouse-1>)}}}.
+
+  Modes reconfigured to support the above distinction are:
+
+  - ~dired-mode~
+  - ~ibuffer-mode~
+  - ~bookmark-bmenu-mode~
+
+  This variable is only evaluated if ~anju-unset-legacy-mouse-bindings-enable~ is non-nil.
+
+- ~anju-reconfigure-main-menu-enable~ ::
+  Top-level variable to reconfigure the main menu.
 
   If ~anju-reconfigure-main-menu-enable~ is ~t~, the following variables determine how the main menu is reconfigured:
 
-  - ~anju-reconfigure-main-menu-hook~ :: a list of functions, each modifying a menu of the main menu.
+  - ~anju-reconfigure-main-menu-hook~ ::
+    A list of functions, each modifying a menu of the main menu.
 
-  - ~anju-help-menu-remove-emacs-tutorial~ :: control if the Emacs tutorial menu items are shown.
+  - ~anju-help-menu-remove-emacs-tutorial~ ::
+    Control if the Emacs tutorial menu items are shown.
 
 By default, all the above ~*-enable~ variables are set to ~t~.  Users preferring to make granular changes to ~anju-init~ can invoke ~M-x~ ~customize-group~ ~anju~.
 

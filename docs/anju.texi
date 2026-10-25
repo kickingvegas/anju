@@ -89,6 +89,7 @@ Features
 * Context Menu Features::
 * Main Menu Features::
 * Window Management Features::
+* Mouse Binding Changes::
 
 Context Menu Features
 
@@ -281,6 +282,7 @@ Anju offers many enhancements to the mouse interactions provided by Emacs. These
 * Context Menu Features::
 * Main Menu Features::
 * Window Management Features::
+* Mouse Binding Changes::
 @end menu
 
 @node Mode Line Features
@@ -1193,6 +1195,39 @@ For experienced users@comma{} the ``Emacs Tutorial'' menu items can be removed v
 
 Window management via mouse interaction is provided for through the @ref{Mode Line Features, , mode line} and @ref{Context Menu Features, , context menu}. More detail is provided in those sections.
 
+@node Mouse Binding Changes
+@section Mouse Binding Changes
+
+@cindex Mouse Binding Changes
+
+Anju makes the following changes to the default mouse bindings set in Emacs:
+
+@itemize
+@item
+Removes most bindings involving the middle mouse button (@kbd{<mouse-2>}).
+
+@item
+Removes mouse bindings related to secondary selection (@ref{Secondary Selection,,,emacs,}).
+
+@item
+Change selection and open behavior in application-like modes.
+
+By default@comma{} built-in Emacs modes treat their content as a hypertext document@comma{} where a single click @kbd{<mouse-1>} on a link is treated as an open action. This results in surprise for modes whose content is more akin to an application. For applications@comma{} a single-click  event is treated as a selection action and a double-click @kbd{<mouse-1>} event is treated as an open action.
+
+Modes reconfigured to support application-like behavior are:
+
+@itemize
+@item
+@code{dired-mode}
+@item
+@code{ibuffer-mode}
+@item
+@code{bookmark-bmenu-mode}
+@end itemize
+
+In addition@comma{} mark toggling is bound to @kbd{M-<mouse-1>} for modes which display a list of items.
+@end itemize
+
 @node Requirements
 @chapter Requirements
 
@@ -1295,6 +1330,7 @@ Customization options for the different areas Anju covers are detailed below.
 @vindex anju-reconfigure-main-menu-enable
 @vindex anju-help-menu-remove-emacs-tutorial
 @vindex anju-reconfigure-main-menu-hook
+@vindex anju-reconfigure-mouse-per-modes-enable
 
 Anju has a number of customizable variables that determine the behavior of @code{anju-init}. They are:
 
@@ -1310,6 +1346,26 @@ Enable Anju-defined bindings for the mode line.
 @item @code{anju-unset-legacy-mouse-bindings-enable}
 Remove bindings using @code{mouse-2} and for secondary selection.
 
+@item @code{anju-reconfigure-mouse-per-modes-enable}
+Run mode-specific hooks to customize their mouse behavior.
+
+Anju distinguishes modes whose content is treated as a hypertext document with those whose content is more akin to an application. For the latter@comma{} a single-click @kbd{<mouse-1>} event is treated as a selection action and a double-click @kbd{<mouse-1>} event is treated as an open action.
+
+In addition@comma{} mark toggling is bound to @kbd{M-<mouse-1>}.
+
+Modes reconfigured to support the above distinction are:
+
+@itemize
+@item
+@code{dired-mode}
+@item
+@code{ibuffer-mode}
+@item
+@code{bookmark-bmenu-mode}
+@end itemize
+
+This variable is only evaluated if @code{anju-unset-legacy-mouse-bindings-enable} is non-nil.
+
 @item @code{anju-reconfigure-main-menu-enable}
 Top-level variable to reconfigure the main menu.
 
@@ -1317,10 +1373,10 @@ If @code{anju-reconfigure-main-menu-enable} is @code{t}@comma{} the following va
 
 @table @asis
 @item @code{anju-reconfigure-main-menu-hook}
-a list of functions@comma{} each modifying a menu of the main menu.
+A list of functions@comma{} each modifying a menu of the main menu.
 
 @item @code{anju-help-menu-remove-emacs-tutorial}
-control if the Emacs tutorial menu items are shown.
+Control if the Emacs tutorial menu items are shown.
 @end table
 @end table
 

@@ -26,7 +26,8 @@ anju-style-text.el
 ELISP_PACKAGES=					\
 anju-context-menu.el				\
 anju-main-menu.el				\
-anju-mode-line.el
+anju-mode-line.el				\
+anju-modes.el
 
 ELISP_TEST_INCLUDES=anju-test-utils.el
 

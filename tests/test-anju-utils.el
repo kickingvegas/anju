@@ -43,6 +43,10 @@
   "Test for `anju-mode-line-bindings-enable'."
   (should (boundp anju-mode-line-bindings-enable)))
 
+(ert-deftest test-anju-reconfigure-mouse-per-modes-enable ()
+  "Test for `anju-reconfigure-mouse-per-modes-enable'."
+  (should (boundp anju-reconfigure-mouse-per-modes-enable)))
+
 (ert-deftest test-anju-reconfigure-main-menu-hook ()
   "Test for `anju-reconfigure-main-menu-hook'."
   (should (eq 'cons (type-of anju-reconfigure-main-menu-hook))))
