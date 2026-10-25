@@ -25,7 +25,7 @@ Version: {{{version}}}
 Anju (안주) is a project to align mouse interactions in Emacs with contemporary (circa 2026) expectations. Effort towards this alignment is made in the following areas:
 
 - Context-sensitive menus
-- De-emphasis of middle mouse button usage (binding =<mouse-2>=)
+- De-emphasis of middle mouse button usage (binding =<mouse-2>=) and remove secondary selection
 - Support direct manipulation when possible
 - Re-organization of the menu bar
 
@@ -110,6 +110,8 @@ Support for direct action based on mouse cursor position is a common user intera
 #+TEXINFO: @subsubheading No Middle Button Bindings
 
 Anju eschews Emacs' default middle mouse button bindings as they presume usage of a [[https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sun_optical_mouse.jpg/960px-Sun_optical_mouse.jpg][90's style 3-button mouse]]. This style of mouse design has long been superseded with a middle [[https://upload.wikimedia.org/wikipedia/commons/2/22/3-Tasten-Maus_Microsoft.jpg][scroll-wheel+button control]]. This widespread hardware change has resulted in the majority of mouse-supporting applications to emphasize scrolling actions with the middle control and clicking actions to the left and right buttons. Anju follows suit, primarily binding the right mouse button click (down) event to raising a context menu. In addition, Anju reconfigures commands that were previously bound to the middle button to ones accessible via a context menu.
+
+In addition, Anju removes bindings related to secondary selection ([[info:emacs#Secondary Selection]]) as it is conflicts with the {{{kbd(M-<mouse-1>)}}} binding that is conventionally used for toggle selection.
 
 The only exception Anju makes in this matter is to keep the Emacs default binding of ~mouse-2~ to ~mouse-yank-primary~.
 
@@ -861,7 +863,7 @@ Anju has a number of customizable variables that determine the behavior of ~anju
 
 - ~anju-mode-line-bindings-enable~ :: Enable Anju-defined bindings for the mode line.
 
-- ~anju-unset-legacy-mouse-bindings-enable~ :: Remove bindings using ~mouse-2~.
+- ~anju-unset-legacy-mouse-bindings-enable~ :: Remove bindings using ~mouse-2~ and for secondary selection.
 
 - ~anju-reconfigure-main-menu-enable~ :: Top-level variable to reconfigure the main menu.
 
