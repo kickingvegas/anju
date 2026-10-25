@@ -200,13 +200,30 @@ This command creates a new frame populated by CMD."
   (call-interactively cmd))
 
 (defun anju-utils--unset-legacy-mouse-bindings ()
-  "Unset Emacs legacy mouse keybindings."
+  "Unset Emacs legacy mouse keybindings.
+
+Mouse bindings for the following areas are removed:
+
+- Middle mouse button usage
+- Mode line bindings
+- Secondary selection"
+
+  ;; Remove middle mouse button bindings
   (keymap-global-unset "<mode-line> C-<mouse-2>" t)
   (keymap-global-unset "<vertical-scroll-bar> C-<mouse-2>" t)
   (keymap-global-unset "<horizontal-scroll-bar> C-<mouse-2>" t)
   (keymap-global-unset "<vertical-line> C-<mouse-2>" t)
   (keymap-global-unset "<right-divider> C-<mouse-2>" t)
   (keymap-global-unset "<bottom-divider> C-<mouse-2>" t)
+
+  ;; Remove secondary selection
+  (keymap-global-unset "M-<mouse-1>")
+  (keymap-global-unset "M-<drag-mouse-1>")  ; was mouse-set-secondary
+  (keymap-global-unset "M-<down-mouse-1>")  ; was mouse-drag-secondary
+  (keymap-global-unset "M-<mouse-2>")       ; was mouse-yank-secondary
+  (keymap-global-unset "M-<mouse-3>")       ; was mouse-secondary-save-then-kill
+
+  ;; Remove mode line bindings
   (keymap-global-unset "<mode-line> <mouse-2>" t)
   (keymap-global-unset "<mode-line> <mouse-3>" t)
   (keymap-global-unset "<mode-line> <double-mouse-1>" t)

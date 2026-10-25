@@ -43,7 +43,7 @@ Anju (안주) is a project to align mouse interactions in Emacs with contemporar
 @item
 Context-sensitive menus
 @item
-De-emphasis of middle mouse button usage (binding @samp{<mouse-2>})
+De-emphasis of middle mouse button usage (binding @samp{<mouse-2>}) and remove secondary selection
 @item
 Support direct manipulation when possible
 @item
@@ -264,6 +264,8 @@ Support for direct action based on mouse cursor position is a common user intera
 @subsubheading No Middle Button Bindings
 
 Anju eschews Emacs' default middle mouse button bindings as they presume usage of a @uref{https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sun_optical_mouse.jpg/960px-Sun_optical_mouse.jpg, 90's style 3-button mouse}. This style of mouse design has long been superseded with a middle @uref{https://upload.wikimedia.org/wikipedia/commons/2/22/3-Tasten-Maus_Microsoft.jpg, scroll-wheel+button control}. This widespread hardware change has resulted in the majority of mouse-supporting applications to emphasize scrolling actions with the middle control and clicking actions to the left and right buttons. Anju follows suit@comma{} primarily binding the right mouse button click (down) event to raising a context menu. In addition@comma{} Anju reconfigures commands that were previously bound to the middle button to ones accessible via a context menu.
+
+In addition@comma{} Anju removes bindings related to secondary selection (@ref{Secondary Selection,,,emacs,}) as it is conflicts with the @kbd{M-<mouse-1>} binding that is conventionally used for toggle selection.
 
 The only exception Anju makes in this matter is to keep the Emacs default binding of @code{mouse-2} to @code{mouse-yank-primary}.
 
@@ -1306,7 +1308,7 @@ If @code{context-menu-functions} is previously set via @code{customize-variable}
 Enable Anju-defined bindings for the mode line.
 
 @item @code{anju-unset-legacy-mouse-bindings-enable}
-Remove bindings using @code{mouse-2}.
+Remove bindings using @code{mouse-2} and for secondary selection.
 
 @item @code{anju-reconfigure-main-menu-enable}
 Top-level variable to reconfigure the main menu.
