@@ -26,6 +26,7 @@ Anju offers many enhancements to the mouse interactions provided by Emacs. These
 - Context Menu
 - Main Menu
 - Emacs Window Management
+- Mouse Binding Changes
 
 Some screenshots to demo Anju's offerings are shown below.
   
@@ -104,6 +105,8 @@ It costs money to make, enhance, and maintain Anju as ideologically free softwar
 
 [[https://www.buymeacoffee.com/kickingvegas][file:docs/images/default-yellow.png]]
 
+Please star and share this project to others as well. Thank you!
+
 * Acknowledgments
 :PROPERTIES:
 :CUSTOM_ID: acknowledgments
@@ -113,3 +116,7 @@ Thanks goes out to the contributors to ~mouse.el~, whose work this package build
 
 
 #+HTML: <p align='center'>© 2026 Charles Y. Choi</p>
+
+# Local Variables:
+# burnish-backend: html
+# End:

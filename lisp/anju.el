@@ -28,7 +28,8 @@
 ;; following areas:
 
 ;; - Context-sensitive menus
-;; - De-emphasis of middle mouse button usage (binding <mouse-2>)
+;; - De-emphasis of middle mouse button usage (binding <mouse-2>) and
+;;   remove secondary selection
 ;; - Support direct manipulation when possible
 ;; - Re-organization of the main menu bar
 
@@ -75,6 +76,7 @@
 (require 'anju-mode-line)
 (require 'anju-main-menu)
 (require 'anju-context-menu)
+(require 'anju-modes)
 
 
 ;;; Initialization Routines
@@ -87,6 +89,7 @@ This initialization command for Anju reconfigures the following areas
 of mouse menus and bindings:
 
 - Legacy mouse bindings (`anju-unset-legacy-mouse-bindings-enable')
+  - Mode-specific bindings (`anju-reconfigure-mouse-per-modes-enable')
 - Mode line bindings (`anju-mode-line-bindings-enable')
 - Main menu (`anju-reconfigure-main-menu-enable')
 - Context menus (`anju-reconfigure-context-menu-functions-enable')
@@ -103,7 +106,10 @@ already has not been done so."
     (context-menu-mode 1))
 
   (if anju-unset-legacy-mouse-bindings-enable
-      (anju-utils--unset-legacy-mouse-bindings))
+      (anju-utils--unset-legacy-mouse-bindings)
+
+    (if anju-reconfigure-mouse-per-modes-enable
+        (anju-modes-reconfigure-mouse)))
 
   (if anju-mode-line-bindings-enable
       (anju-mode-line--set-bindings))

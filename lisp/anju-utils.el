@@ -91,6 +91,29 @@ nil and restart Emacs."
   :type 'boolean
   :group 'anju)
 
+(defcustom anju-reconfigure-mouse-per-modes-enable t
+  "If non-nil, run mode-specific hooks to customize their mouse behavior.
+
+Anju distinguishes modes whose content is treated as a hypertext
+document with those whose content is more akin to an application. For
+the latter, a single-click <mouse–1> event is treated as a selection
+action and a double-click <mouse–1> event is treated as an open action.
+
+Modes reconfigured to support the above distinction are:
+
+- `dired-mode'
+- `ibuffer-mode'
+- `bookmark-bmenu-mode'
+
+This variable is only evaluated when
+`anju-unset-legacy-mouse-bindings-enable' is non-nil. If both variables
+are non-nil, then the function `anju-modes-reconfigure-mouse' is run.
+
+To return to behavior that is not modified by Anju, set this value to
+nil and restart Emacs."
+  :type 'boolean
+  :group 'anju)
+
 (defcustom anju-buffer-list-filter-functions
   '((anju-buffer-list-project-filter . 7)
     (anju-buffer-list-compilation-filter . 3)
