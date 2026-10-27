@@ -105,9 +105,8 @@ already has not been done so."
   (unless context-menu-mode
     (context-menu-mode 1))
 
-  (if anju-unset-legacy-mouse-bindings-enable
-      (anju-utils--unset-legacy-mouse-bindings)
-
+  (when anju-unset-legacy-mouse-bindings-enable
+    (anju-utils--unset-legacy-mouse-bindings)
     (if anju-reconfigure-mouse-per-modes-enable
         (anju-modes-reconfigure-mouse)))
 
