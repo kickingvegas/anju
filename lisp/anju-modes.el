@@ -50,7 +50,6 @@ The following configurations are done to `dired-mode':
 - Toggles mark of a Dired item with M-<mouse–1>."
 
   (setq-local mouse-1-click-follows-link 'double)
-  (keymap-set dired-mode-map "C-M-<mouse-1>" #'browse-url-of-dired-file)
   (keymap-set dired-mode-map "M-<mouse-1>" #'anju-modes-dired-mouse-toggle-mark))
 
 

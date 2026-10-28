@@ -36,9 +36,7 @@
     (dired "~")
     (should (eq mouse-1-click-follows-link 'double))
     (should (eq (keymap-lookup dired-mode-map "M-<mouse-1>")
-                #'anju-modes-dired-mouse-toggle-mark))
-    (should (eq (keymap-lookup dired-mode-map "C-M-<mouse-1>")
-                #'browse-url-of-dired-file))))
+                #'anju-modes-dired-mouse-toggle-mark))))
 
 (ert-deftest test-anju-modes-ibuffer-setup ()
   "Test for `anju-modes-ibuffer-setup'."
