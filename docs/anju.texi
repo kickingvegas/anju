@@ -110,6 +110,7 @@ Org Mode Context Menu
 * Org Headline Context Menu::
 * Org Item Context Menu::
 * Org Table Context Menu::
+* Org Block Context Menu::
 * Org Insert Link::
 * Org Toggle Images & Show Markup::
 * Org “Copy as…” Context Menu::
@@ -452,6 +453,7 @@ It is recommended that the @code{org-mouse} package be loaded when using Anju.
 * Org Headline Context Menu::
 * Org Item Context Menu::
 * Org Table Context Menu::
+* Org Block Context Menu::
 * Org Insert Link::
 * Org Toggle Images & Show Markup::
 * Org “Copy as…” Context Menu::
@@ -493,11 +495,20 @@ If the context menu is raised in a table@comma{} then table-specific commands ar
 
 @image{images/anju-context-menu-org-table,,,,png}
 
-The context menu shows the current Org table cell reference where the point is in (e.g. @code{@@3$2}). Clicking on this reference will copy it to the @code{kill-ring} for subsequent use in a table formula.
+The context menu shows the current Org table cell reference where the point is in (e.g. @code{@@2$2}). Clicking on this reference will copy it to the @code{kill-ring} for subsequent use in a table formula.
 
 If a selected region or rectangle is made whose extents are within the table@comma{} then the table region reference  is displayed.
 
 The “Org Table Region” sub-menu provides commands to cut@comma{} copy@comma{} and paste rectangular regions made in the table. Note that the binding @kbd{C-M-<mouse-1>} lets you make rectangle selections.
+
+@node Org Block Context Menu
+@subsubsection Org Block Context Menu
+
+@cindex Org Block Context Menu
+
+If the context menu is raised over the declaration of a block (source (@code{#+begin_src})@comma{} example (@code{#+begin_example})@comma{} or name (@code{#+begin_name})) then a context menu for the type of block is shown.
+
+@image{images/anju-context-menu-org-block,,,,png}
 
 @node Org Insert Link
 @subsubsection Org Insert Link
@@ -1134,7 +1145,7 @@ Anju makes the following modifications to the menu bar @strong{Tools} menu:
 
 @table @asis
 @item Adds the “Macro Recorder” sub-menu
-Commands to create@comma{} run@comma{} edit@comma{} and debug  @ref{Macro Recorder Menu, , keyboard macros}.
+Commands to create@comma{} run@comma{} edit@comma{} and debug @ref{Macro Recorder Menu, , keyboard macros}.
 
 @item Adds global Org commands
 Provide general access to these commands

@@ -257,12 +257,19 @@ If the context menu is raised in a table, then table-specific commands are shown
 
 [[file:images/anju-context-menu-org-table.png]]
 
-The context menu shows the current Org table cell reference where the point is in (e.g. ~@3$2~). Clicking on this reference will copy it to the ~kill-ring~ for subsequent use in a table formula.
+The context menu shows the current Org table cell reference where the point is in (e.g. ~@2$2~). Clicking on this reference will copy it to the ~kill-ring~ for subsequent use in a table formula.
 
 If a selected region or rectangle is made whose extents are within the table, then the table region reference  is displayed.
 
 The “Org Table Region” sub-menu provides commands to cut, copy, and paste rectangular regions made in the table. Note that the binding {{{kbd(C-M-<mouse-1>)}}} lets you make rectangle selections.
 
+
+**** Org Block Context Menu
+#+CINDEX: Org Block Context Menu
+
+If the context menu is raised over the declaration of a block (source (~#+begin_src~), example (~#+begin_example~), or name (~#+begin_name~)) then a context menu for the type of block is shown.
+
+[[file:images/anju-context-menu-org-block.png]]
 
 **** Org Insert Link
 #+CINDEX: Org Insert Link
@@ -732,7 +739,7 @@ This modification is optional. For more detail, see [[#imenu-menu-customization]
 
 Anju makes the following modifications to the menu bar *Tools* menu:
 
-- Adds the “Macro Recorder” sub-menu :: Commands to create, run, edit, and debug  [[#macro-recorder-menu][keyboard macros]].
+- Adds the “Macro Recorder” sub-menu :: Commands to create, run, edit, and debug [[#macro-recorder-menu][keyboard macros]].
 
 - Adds global Org commands :: Provide general access to these commands
   - “Org Store Link” (~org-store-link~)
