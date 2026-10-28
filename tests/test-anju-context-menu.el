@@ -382,7 +382,7 @@
 ;;; Context Menu: Emacs Lisp Mode
 
 (defun test--anju-edebug-mode-menu (kmap)
-  "Test for `anju-edebug-mode-menu'."
+  "Test for KMAP `anju-edebug-mode-menu'."
   (anju-test-keymap
    kmap
    "Mode"
@@ -422,7 +422,6 @@
 (ert-deftest test-anju-edebug-mode-menu ()
   "Test for `anju-edebug-mode-menu'."
   (test--anju-edebug-mode-menu anju-edebug-mode-menu))
-
 
 (defun test--anju-edebug-breakpoint-menu (kmap)
   "Test for `anju-edebug-breakpoint-menu'."
@@ -1001,13 +1000,59 @@
      (goto-char (point-min))
      (save-buffer))))
 
+
+(ert-deftest test-anju-context-menu-org-mode-block ()
+  "Test for `anju-context-menu-org-mode' when point is in a block."
+  (anju-test-context-menu-function-with-filetype
+   ".org"
+   #'anju-context-menu-org-mode
+   6
+   (lambda (items)
+     (let ((i 0))
+       (anju-test-menu-item (seq-elt items i) "--")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Edit"
+        #'org-edit-src-code
+        "Edit the source or example block at point")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Assign Name…"
+        #'casual-org-assign-name
+        "Insert Org NAME keyword for block or table")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Eval"
+        #'org-ctrl-c-ctrl-c
+        "Evaluate block")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Copy Block"
+        #'anju-org-copy-block
+        "Copy Org src or example block")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Tangle"
+        #'org-babel-tangle
+        "Write code blocks to source-specific files")))
+   (lambda (filename description)
+     (insert "#+begin_src elisp :lexical no :tangle foo.el
+(message \"hi there\")
+#+end_src")
+     (goto-char (point-min))
+     (save-buffer))))
+
 (ert-deftest test-anju-context-menu-org-mode-table ()
   "Test for `anju-context-menu-org-mode' when point is in table."
 
   (anju-test-context-menu-function-with-filetype
    ".org"
    #'anju-context-menu-org-mode
-   8
+   9
    (lambda (items)
      (let* ((i 0))
 
@@ -1046,6 +1091,12 @@
         "Edit Table Formulas"
         #'org-table-edit-formulas
         "Edit the formulas of the current table in a separate buffer")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Assign Name…"
+        #'casual-org-assign-name
+        "Insert Org NAME keyword for block or table")
 
        (anju-test-menu-item
         (seq-elt items (cl-incf i))
