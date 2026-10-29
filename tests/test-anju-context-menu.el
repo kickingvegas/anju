@@ -1993,56 +1993,94 @@ run ‘make’")
   (anju-test-keymap
    anju-context-window-management-menu
    "Window"
-   4
+   7
+
    (lambda (items)
-     (let ((delete-window-item (seq-elt items 0))
-           (split-horizontal-item (seq-elt items 1))
-           (split-vertical-item (seq-elt items 2))
-           (swap-menu (seq-elt items 3)))
-       (anju-test-menu-item delete-window-item
-                            "×"
-                            #'delete-window
-                            "Delete window")
+     (let ((i 0))
+       (anju-test-menu-item
+        (seq-elt items i)
+        "×"
+        #'delete-window
+        "Delete window")
 
-       (anju-test-menu-item split-horizontal-item
-                            "Split →"
-                            #'mouse-split-window-horizontally
-                            "Split right at mouse point")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Split →"
+        #'mouse-split-window-horizontally
+        "Split right at mouse point")
 
-       (anju-test-menu-item split-vertical-item
-                            "Split ↓"
-                            #'mouse-split-window-vertically
-                            "Split below at mouse point")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Split ↓"
+        #'mouse-split-window-vertically
+        "Split below at mouse point")
 
-       (let ((swap-kmap (seq-elt swap-menu 3)))
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
          (anju-test-keymap
-          swap-kmap
+          kmap
           "Swap"
           4
           (lambda (items)
-            (let ((up-item (seq-elt items 0))
-                  (down-item (seq-elt items 1))
-                  (left-item (seq-elt items 2))
-                  (right-item (seq-elt items 3)))
-              (anju-test-menu-item up-item
-                                   "↑"
-                                   #'windmove-swap-states-up
-                                   "Swap window up")
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "→"
+               #'windmove-swap-states-right
+               "Swap window right")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "←"
+               #'windmove-swap-states-left
+               "Swap window left")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↑"
+               #'windmove-swap-states-up
+               "Swap window up")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↓"
+               #'windmove-swap-states-down
+               "Swap window down")))))
 
-              (anju-test-menu-item down-item
-                                   "↓"
-                                   #'windmove-swap-states-down
-                                   "Swap window down")
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
+         (anju-test-keymap
+          kmap
+          "Flip"
+          2
+          (lambda (items)
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "↔︎"
+               #'window-layout-flip-leftright
+               "Flip WINDOW’s child windows horizontally")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↕︎"
+               #'window-layout-flip-topdown
+               "Flip WINDOW’s child windows vertically")))))
 
-              (anju-test-menu-item left-item
-                                   "←"
-                                   #'windmove-swap-states-left
-                                   "Swap window left")
-
-              (anju-test-menu-item right-item
-                                   "→"
-                                   #'windmove-swap-states-right
-                                   "Swap window right")))))))))
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
+         (anju-test-keymap
+          kmap
+          "Rotate"
+          2
+          (lambda (items)
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "↻"
+               #'window-layout-rotate-clockwise
+               "Rotate layout of WINDOW’s child windows clockwise by 90 degrees")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↺"
+               #'window-layout-rotate-anticlockwise
+               "Rotate layout of WINDOW’s child windows counterclockwise by 90 degrees")))))))))
 
 
 ;;; Context Menu: Rectangle Commands

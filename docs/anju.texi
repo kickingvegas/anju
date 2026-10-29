@@ -104,6 +104,7 @@ Context Menu Features
 * Makefile Context Menu::
 * Rectangle Context Menu::
 * Version-Controlled Source::
+* Context Menu Window Management::
 
 Org Mode Context Menu
 
@@ -317,7 +318,17 @@ Split the window horizontally (→)
 @item
 Split the window vertically (↓)
 @item
-If multiple windows are shown@comma{} swap the current window.
+If multiple windows are shown@comma{} with the current window (Emacs 31+):
+@itemize
+@item
+Swap it in an available direction
+@item
+Flip it in an available direction
+@item
+Rotate all windows@comma{} either clockwise or counter-clockwise
+@item
+Transpose the windows
+@end itemize
 @end itemize
 
 Note: usage of ``window'' refers to the Emacs definition of it. Refer to @ref{Frames,,,emacs,} for more detail on this.
@@ -379,6 +390,7 @@ Learn more about the different areas Anju enhances context menus in the links be
 * Makefile Context Menu::
 * Rectangle Context Menu::
 * Version-Controlled Source::
+* Context Menu Window Management::
 @end menu
 
 @node Selected Text Commands
@@ -758,6 +770,63 @@ To learn more about rectangle commands@comma{} see @ref{Rectangles,info ``(emacs
 If a context menu is raised on a buffer containing a modified version controlled file@comma{} then support for viewing the difference between the modifications with its previous commit is provided by the menu item “Ediff revision…”. The menu item “Git Grep…” (@code{vc-git-grep}) will constrain a @code{grep} search of only files that are checked-in the repository.
 
 If Magit 4.4+ is installed@comma{} then different Magit commands depending on context are displayed. If the context menu is raised in a file buffer@comma{} then the menu item “Magit Dispatch…” (@code{magit-file-dispatch}) is shown@comma{} otherwise “Magit Status” (@code{magit-status}).
+
+@node Context Menu Window Management
+@subsection Context Menu Window Management
+
+@cindex Context Menu Window Management
+@vindex anju-context-window-management-menu
+
+@image{images/anju-context-menu-window-management,,,,png}
+
+Window management via context menu provides the following commands and sub-menus:
+
+@table @asis
+@item ×
+Delete window
+
+@item Split →
+Split window horizontally using mouse position
+
+@item Split ↓
+Split window vertically using mouse position
+
+@item Swap
+Swap current window with window in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↑ : Above
+@item
+↓ : Below
+@item
+← : Left
+@item
+→ : Right
+@end itemize
+
+@item Flip
+Flip current window in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↔︎ : Left-Right
+@item
+↕︎ : Top-Down
+@end itemize
+
+@item Rotate
+Rotate windows in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↻ : Clockwise
+@item
+↺ : Counter-clockwise
+@end itemize
+
+@item Transpose
+Transpose windows (only in GNU Emacs 31+)
+@end table
+
+Window management menu items are context sensitive so will only display if applicable.
 
 @node Main Menu Features
 @section Main Menu Features
@@ -1204,7 +1273,7 @@ For experienced users@comma{} the ``Emacs Tutorial'' menu items can be removed v
 
 @cindex Window Management Features
 
-Window management via mouse interaction is provided for through the @ref{Mode Line Features, , mode line} and @ref{Context Menu Features, , context menu}. More detail is provided in those sections.
+Window management via mouse interaction is provided for through the @ref{Mode Line Features, , mode line} and @ref{Context Menu Window Management, , context menu}. More detail is provided in those sections.
 
 @node Mouse Binding Changes
 @section Mouse Binding Changes
