@@ -1793,21 +1793,57 @@ This hook is intended for `context-menu-functions'."
 
     ("Swap"
      :visible (and (eq (selected-window) (anju-window-under-mouse)) (not (one-window-p t)))
+     ["→" windmove-swap-states-right
+      :visible (window-in-direction 'right)
+      :help "Swap window right"]
+
+     ["←" windmove-swap-states-left
+      :visible (window-in-direction 'left)
+      :help "Swap window left"]
+
      ["↑" windmove-swap-states-up
       :visible (window-in-direction 'above)
       :help "Swap window up"]
 
      ["↓" windmove-swap-states-down
       :visible (window-in-direction 'below)
-      :help "Swap window down"]
+      :help "Swap window down"])
 
-     ["←" windmove-swap-states-left
-      :visible (window-in-direction 'left)
-      :help "Swap window left"]
+    ("Flip"
+     :visible (and (eq (selected-window) (anju-window-under-mouse))
+                   (not (one-window-p t))
+                   (fboundp 'window-layout-flip-leftright)
+                   (fboundp 'window-layout-flip-topdown))
 
-     ["→" windmove-swap-states-right
-      :visible (window-in-direction 'right)
-      :help "Swap window right"])))
+     ["↔︎" window-layout-flip-leftright
+      :visible (and (fboundp 'window-layout-flip-leftright)
+                    (not (one-window-p))
+                    (or (window-in-direction 'left)
+                        (window-in-direction 'right)))
+      :help "Flip WINDOW’s child windows horizontally"]
+
+     ["↕︎" window-layout-flip-topdown
+      :visible (and (fboundp 'window-layout-flip-topdown)
+                    (not (one-window-p))
+                    (or (window-in-direction 'above)
+                        (window-in-direction 'below)))
+      :help "Flip WINDOW’s child windows vertically"])
+
+    ("Rotate"
+     :visible (and (eq (selected-window) (anju-window-under-mouse))
+                   (not (one-window-p t))
+                   (fboundp 'window-layout-rotate-anticlockwise)
+                   (fboundp 'window-layout-rotate-clockwise))
+
+     ["↻" window-layout-rotate-clockwise
+      :help "Rotate layout of WINDOW’s child windows clockwise by 90 degrees"]
+
+     ["↺" window-layout-rotate-anticlockwise
+      :help "Rotate layout of WINDOW’s child windows counterclockwise by 90 degrees"])
+
+    ["Transpose" window-layout-transpose
+     :visible (and (fboundp 'window-layout-transpose) (not (one-window-p)))
+     :help "Transpose child windows of WINDOW"]))
 
 (defun anju-context-menu-window (menu _click)
   "Context menu hook function for window commands.
