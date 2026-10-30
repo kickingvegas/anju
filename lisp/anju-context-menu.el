@@ -332,6 +332,19 @@ Return t if populated, nil otherwise."
       (kill-new link)
       (message "Copied '%s' to clipboard" link))))
 
+(defun anju-org-copy-block ()
+  "Copy Org src or example block.
+
+This command derived from code published by Helen Chong in URL
+`https://helenchong.dev/blog/posts/2026-10-17-emacs-org-copy-block-contents/'"
+  (interactive)
+  ;; TODO: handle special-block begin_notes
+  (let ((element (org-element-at-point)))
+    (if (member (org-element-type element) '(src-block example-block))
+        (let ((value (org-element-property :value element)))
+          (kill-new (string-trim-right value)))
+      (error "Point must be in declaration of an Org src or example block"))))
+
 (defun anju-context-menu-org-mode (menu click)
   "Context menu hook function for Org mode commands.
 
@@ -504,11 +517,47 @@ outline tree"])
                            :label "Edit Table Formulas"
                            :help "Edit the formulas of the current table in a separate buffer"])
 
+      (easy-menu-add-item menu nil [casual-org-assign-name
+                                    casual-org-assign-name
+                                    :label "Assign Name…"
+                                    :help "Insert Org NAME keyword for block or table"])
+
       ;; (easy-menu-add-item menu nil cc/insert-org-plot-menu)
       (easy-menu-add-item menu nil [org-plot/gnuplot
                                     org-plot/gnuplot
                                     :label "Run gnuplot"
-                                    :help "Plot table using gnuplot"]))
+                                     :help "Plot table using gnuplot"]))
+
+     ((and (org-at-block-p) (not (anju-rectangle-selected-p)))
+      (easy-menu-add-item menu nil [org-edit-src-code
+                                    org-edit-src-code
+                                    :label "Edit"
+                                    :help "Edit the source or example block at point"])
+
+      (easy-menu-add-item menu nil [casual-org-assign-name
+                                    casual-org-assign-name
+                                    :label "Assign Name…"
+                                    :help "Insert Org NAME keyword for block or table"])
+
+      (easy-menu-add-item menu nil [org-ctrl-c-ctrl-c
+                                    org-ctrl-c-ctrl-c
+                                    :label "Eval"
+                                    :visible (or (eq (org-element-type (org-element-context)) 'src-block)
+                                                 (eq (org-element-type (org-element-context)) 'dynamic-block))
+                                    :help "Evaluate block"])
+
+      (easy-menu-add-item menu nil [anju-org-copy-block
+                                    anju-org-copy-block
+                                    :label "Copy Block"
+                                    :visible (member (org-element-type (org-element-at-point))
+                                                     '(src-block example-block))
+                                    :help "Copy Org src or example block"])
+
+      (easy-menu-add-item menu nil [org-babel-tangle
+                                    org-babel-tangle
+                                    :label "Tangle"
+                                    :visible (eq (org-element-type (org-element-context)) 'src-block)
+                                    :help "Write code blocks to source-specific files"]))
 
      ;; so far nothing global
      (t
@@ -1744,21 +1793,57 @@ This hook is intended for `context-menu-functions'."
 
     ("Swap"
      :visible (and (eq (selected-window) (anju-window-under-mouse)) (not (one-window-p t)))
+     ["→" windmove-swap-states-right
+      :visible (window-in-direction 'right)
+      :help "Swap window right"]
+
+     ["←" windmove-swap-states-left
+      :visible (window-in-direction 'left)
+      :help "Swap window left"]
+
      ["↑" windmove-swap-states-up
       :visible (window-in-direction 'above)
       :help "Swap window up"]
 
      ["↓" windmove-swap-states-down
       :visible (window-in-direction 'below)
-      :help "Swap window down"]
+      :help "Swap window down"])
 
-     ["←" windmove-swap-states-left
-      :visible (window-in-direction 'left)
-      :help "Swap window left"]
+    ("Flip"
+     :visible (and (eq (selected-window) (anju-window-under-mouse))
+                   (not (one-window-p t))
+                   (fboundp 'window-layout-flip-leftright)
+                   (fboundp 'window-layout-flip-topdown))
 
-     ["→" windmove-swap-states-right
-      :visible (window-in-direction 'right)
-      :help "Swap window right"])))
+     ["↔︎" window-layout-flip-leftright
+      :visible (and (fboundp 'window-layout-flip-leftright)
+                    (not (one-window-p))
+                    (or (window-in-direction 'left)
+                        (window-in-direction 'right)))
+      :help "Flip WINDOW’s child windows horizontally"]
+
+     ["↕︎" window-layout-flip-topdown
+      :visible (and (fboundp 'window-layout-flip-topdown)
+                    (not (one-window-p))
+                    (or (window-in-direction 'above)
+                        (window-in-direction 'below)))
+      :help "Flip WINDOW’s child windows vertically"])
+
+    ("Rotate"
+     :visible (and (eq (selected-window) (anju-window-under-mouse))
+                   (not (one-window-p t))
+                   (fboundp 'window-layout-rotate-anticlockwise)
+                   (fboundp 'window-layout-rotate-clockwise))
+
+     ["↻" window-layout-rotate-clockwise
+      :help "Rotate layout of WINDOW’s child windows clockwise by 90 degrees"]
+
+     ["↺" window-layout-rotate-anticlockwise
+      :help "Rotate layout of WINDOW’s child windows counterclockwise by 90 degrees"])
+
+    ["Transpose" window-layout-transpose
+     :visible (and (fboundp 'window-layout-transpose) (not (one-window-p)))
+     :help "Transpose child windows of WINDOW"]))
 
 (defun anju-context-menu-window (menu _click)
   "Context menu hook function for window commands.

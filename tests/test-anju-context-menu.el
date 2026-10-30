@@ -382,7 +382,7 @@
 ;;; Context Menu: Emacs Lisp Mode
 
 (defun test--anju-edebug-mode-menu (kmap)
-  "Test for `anju-edebug-mode-menu'."
+  "Test for KMAP `anju-edebug-mode-menu'."
   (anju-test-keymap
    kmap
    "Mode"
@@ -422,7 +422,6 @@
 (ert-deftest test-anju-edebug-mode-menu ()
   "Test for `anju-edebug-mode-menu'."
   (test--anju-edebug-mode-menu anju-edebug-mode-menu))
-
 
 (defun test--anju-edebug-breakpoint-menu (kmap)
   "Test for `anju-edebug-breakpoint-menu'."
@@ -1001,13 +1000,59 @@
      (goto-char (point-min))
      (save-buffer))))
 
+
+(ert-deftest test-anju-context-menu-org-mode-block ()
+  "Test for `anju-context-menu-org-mode' when point is in a block."
+  (anju-test-context-menu-function-with-filetype
+   ".org"
+   #'anju-context-menu-org-mode
+   6
+   (lambda (items)
+     (let ((i 0))
+       (anju-test-menu-item (seq-elt items i) "--")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Edit"
+        #'org-edit-src-code
+        "Edit the source or example block at point")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Assign Name…"
+        #'casual-org-assign-name
+        "Insert Org NAME keyword for block or table")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Eval"
+        #'org-ctrl-c-ctrl-c
+        "Evaluate block")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Copy Block"
+        #'anju-org-copy-block
+        "Copy Org src or example block")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Tangle"
+        #'org-babel-tangle
+        "Write code blocks to source-specific files")))
+   (lambda (filename description)
+     (insert "#+begin_src elisp :lexical no :tangle foo.el
+(message \"hi there\")
+#+end_src")
+     (goto-char (point-min))
+     (save-buffer))))
+
 (ert-deftest test-anju-context-menu-org-mode-table ()
   "Test for `anju-context-menu-org-mode' when point is in table."
 
   (anju-test-context-menu-function-with-filetype
    ".org"
    #'anju-context-menu-org-mode
-   8
+   9
    (lambda (items)
      (let* ((i 0))
 
@@ -1046,6 +1091,12 @@
         "Edit Table Formulas"
         #'org-table-edit-formulas
         "Edit the formulas of the current table in a separate buffer")
+
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Assign Name…"
+        #'casual-org-assign-name
+        "Insert Org NAME keyword for block or table")
 
        (anju-test-menu-item
         (seq-elt items (cl-incf i))
@@ -1942,56 +1993,94 @@ run ‘make’")
   (anju-test-keymap
    anju-context-window-management-menu
    "Window"
-   4
+   7
+
    (lambda (items)
-     (let ((delete-window-item (seq-elt items 0))
-           (split-horizontal-item (seq-elt items 1))
-           (split-vertical-item (seq-elt items 2))
-           (swap-menu (seq-elt items 3)))
-       (anju-test-menu-item delete-window-item
-                            "×"
-                            #'delete-window
-                            "Delete window")
+     (let ((i 0))
+       (anju-test-menu-item
+        (seq-elt items i)
+        "×"
+        #'delete-window
+        "Delete window")
 
-       (anju-test-menu-item split-horizontal-item
-                            "Split →"
-                            #'mouse-split-window-horizontally
-                            "Split right at mouse point")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Split →"
+        #'mouse-split-window-horizontally
+        "Split right at mouse point")
 
-       (anju-test-menu-item split-vertical-item
-                            "Split ↓"
-                            #'mouse-split-window-vertically
-                            "Split below at mouse point")
+       (anju-test-menu-item
+        (seq-elt items (cl-incf i))
+        "Split ↓"
+        #'mouse-split-window-vertically
+        "Split below at mouse point")
 
-       (let ((swap-kmap (seq-elt swap-menu 3)))
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
          (anju-test-keymap
-          swap-kmap
+          kmap
           "Swap"
           4
           (lambda (items)
-            (let ((up-item (seq-elt items 0))
-                  (down-item (seq-elt items 1))
-                  (left-item (seq-elt items 2))
-                  (right-item (seq-elt items 3)))
-              (anju-test-menu-item up-item
-                                   "↑"
-                                   #'windmove-swap-states-up
-                                   "Swap window up")
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "→"
+               #'windmove-swap-states-right
+               "Swap window right")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "←"
+               #'windmove-swap-states-left
+               "Swap window left")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↑"
+               #'windmove-swap-states-up
+               "Swap window up")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↓"
+               #'windmove-swap-states-down
+               "Swap window down")))))
 
-              (anju-test-menu-item down-item
-                                   "↓"
-                                   #'windmove-swap-states-down
-                                   "Swap window down")
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
+         (anju-test-keymap
+          kmap
+          "Flip"
+          2
+          (lambda (items)
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "↔︎"
+               #'window-layout-flip-leftright
+               "Flip WINDOW’s child windows horizontally")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↕︎"
+               #'window-layout-flip-topdown
+               "Flip WINDOW’s child windows vertically")))))
 
-              (anju-test-menu-item left-item
-                                   "←"
-                                   #'windmove-swap-states-left
-                                   "Swap window left")
-
-              (anju-test-menu-item right-item
-                                   "→"
-                                   #'windmove-swap-states-right
-                                   "Swap window right")))))))))
+       (let* ((item (seq-elt items (cl-incf i)))
+              (kmap (seq-elt item 3)))
+         (anju-test-keymap
+          kmap
+          "Rotate"
+          2
+          (lambda (items)
+            (let ((i 0))
+              (anju-test-menu-item
+               (seq-elt items i)
+               "↻"
+               #'window-layout-rotate-clockwise
+               "Rotate layout of WINDOW’s child windows clockwise by 90 degrees")
+              (anju-test-menu-item
+               (seq-elt items (cl-incf i))
+               "↺"
+               #'window-layout-rotate-anticlockwise
+               "Rotate layout of WINDOW’s child windows counterclockwise by 90 degrees")))))))))
 
 
 ;;; Context Menu: Rectangle Commands

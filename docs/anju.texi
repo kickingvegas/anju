@@ -20,7 +20,7 @@ Copyright © 2026 Charles Y@. Choi
 @finalout
 @titlepage
 @title Anju User Guide
-@subtitle for version 1.9.0
+@subtitle for version 1.9.1-rc.1
 @author Charles Y@. Choi (@email{kickingvegas@@gmail.com})
 @page
 @vskip 0pt plus 1filll
@@ -33,7 +33,7 @@ Copyright © 2026 Charles Y@. Choi
 @node Top
 @top Anju User Guide
 
-Version: 1.9.0
+Version: 1.9.1-rc.1
 
 Copyright © 2026 @w{Charles Y. Choi}
 
@@ -43,7 +43,7 @@ Anju (안주) is a project to align mouse interactions in Emacs with contemporar
 @item
 Context-sensitive menus
 @item
-De-emphasis of middle mouse button usage (binding @samp{<mouse-2>})
+De-emphasis of middle mouse button usage (binding @samp{<mouse-2>}) and remove secondary selection
 @item
 Support direct manipulation when possible
 @item
@@ -89,6 +89,7 @@ Features
 * Context Menu Features::
 * Main Menu Features::
 * Window Management Features::
+* Mouse Binding Changes::
 
 Context Menu Features
 
@@ -103,12 +104,14 @@ Context Menu Features
 * Makefile Context Menu::
 * Rectangle Context Menu::
 * Version-Controlled Source::
+* Context Menu Window Management::
 
 Org Mode Context Menu
 
 * Org Headline Context Menu::
 * Org Item Context Menu::
 * Org Table Context Menu::
+* Org Block Context Menu::
 * Org Insert Link::
 * Org Toggle Images & Show Markup::
 * Org “Copy as…” Context Menu::
@@ -265,6 +268,8 @@ Support for direct action based on mouse cursor position is a common user intera
 
 Anju eschews Emacs' default middle mouse button bindings as they presume usage of a @uref{https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Sun_optical_mouse.jpg/960px-Sun_optical_mouse.jpg, 90's style 3-button mouse}. This style of mouse design has long been superseded with a middle @uref{https://upload.wikimedia.org/wikipedia/commons/2/22/3-Tasten-Maus_Microsoft.jpg, scroll-wheel+button control}. This widespread hardware change has resulted in the majority of mouse-supporting applications to emphasize scrolling actions with the middle control and clicking actions to the left and right buttons. Anju follows suit@comma{} primarily binding the right mouse button click (down) event to raising a context menu. In addition@comma{} Anju reconfigures commands that were previously bound to the middle button to ones accessible via a context menu.
 
+In addition@comma{} Anju removes bindings related to secondary selection (@ref{Secondary Selection,,,emacs,}) as it is conflicts with the @kbd{M-<mouse-1>} binding that is conventionally used for toggle selection.
+
 The only exception Anju makes in this matter is to keep the Emacs default binding of @code{mouse-2} to @code{mouse-yank-primary}.
 
 @node Features
@@ -279,6 +284,7 @@ Anju offers many enhancements to the mouse interactions provided by Emacs. These
 * Context Menu Features::
 * Main Menu Features::
 * Window Management Features::
+* Mouse Binding Changes::
 @end menu
 
 @node Mode Line Features
@@ -312,7 +318,17 @@ Split the window horizontally (→)
 @item
 Split the window vertically (↓)
 @item
-If multiple windows are shown@comma{} swap the current window.
+If multiple windows are shown@comma{} with the current window (Emacs 31+):
+@itemize
+@item
+Swap it in an available direction
+@item
+Flip it in an available direction
+@item
+Rotate all windows@comma{} either clockwise or counter-clockwise
+@item
+Transpose the windows
+@end itemize
 @end itemize
 
 Note: usage of ``window'' refers to the Emacs definition of it. Refer to @ref{Frames,,,emacs,} for more detail on this.
@@ -374,6 +390,7 @@ Learn more about the different areas Anju enhances context menus in the links be
 * Makefile Context Menu::
 * Rectangle Context Menu::
 * Version-Controlled Source::
+* Context Menu Window Management::
 @end menu
 
 @node Selected Text Commands
@@ -448,6 +465,7 @@ It is recommended that the @code{org-mouse} package be loaded when using Anju.
 * Org Headline Context Menu::
 * Org Item Context Menu::
 * Org Table Context Menu::
+* Org Block Context Menu::
 * Org Insert Link::
 * Org Toggle Images & Show Markup::
 * Org “Copy as…” Context Menu::
@@ -489,11 +507,20 @@ If the context menu is raised in a table@comma{} then table-specific commands ar
 
 @image{images/anju-context-menu-org-table,,,,png}
 
-The context menu shows the current Org table cell reference where the point is in (e.g. @code{@@3$2}). Clicking on this reference will copy it to the @code{kill-ring} for subsequent use in a table formula.
+The context menu shows the current Org table cell reference where the point is in (e.g. @code{@@2$2}). Clicking on this reference will copy it to the @code{kill-ring} for subsequent use in a table formula.
 
 If a selected region or rectangle is made whose extents are within the table@comma{} then the table region reference  is displayed.
 
 The “Org Table Region” sub-menu provides commands to cut@comma{} copy@comma{} and paste rectangular regions made in the table. Note that the binding @kbd{C-M-<mouse-1>} lets you make rectangle selections.
+
+@node Org Block Context Menu
+@subsubsection Org Block Context Menu
+
+@cindex Org Block Context Menu
+
+If the context menu is raised over the declaration of a block (source (@code{#+begin_src})@comma{} example (@code{#+begin_example})@comma{} or name (@code{#+begin_name})) then a context menu for the type of block is shown.
+
+@image{images/anju-context-menu-org-block,,,,png}
 
 @node Org Insert Link
 @subsubsection Org Insert Link
@@ -743,6 +770,63 @@ To learn more about rectangle commands@comma{} see @ref{Rectangles,info ``(emacs
 If a context menu is raised on a buffer containing a modified version controlled file@comma{} then support for viewing the difference between the modifications with its previous commit is provided by the menu item “Ediff revision…”. The menu item “Git Grep…” (@code{vc-git-grep}) will constrain a @code{grep} search of only files that are checked-in the repository.
 
 If Magit 4.4+ is installed@comma{} then different Magit commands depending on context are displayed. If the context menu is raised in a file buffer@comma{} then the menu item “Magit Dispatch…” (@code{magit-file-dispatch}) is shown@comma{} otherwise “Magit Status” (@code{magit-status}).
+
+@node Context Menu Window Management
+@subsection Context Menu Window Management
+
+@cindex Context Menu Window Management
+@vindex anju-context-window-management-menu
+
+@image{images/anju-context-menu-window-management,,,,png}
+
+Window management via context menu provides the following commands and sub-menus:
+
+@table @asis
+@item ×
+Delete window
+
+@item Split →
+Split window horizontally using mouse position
+
+@item Split ↓
+Split window vertically using mouse position
+
+@item Swap
+Swap current window with window in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↑ : Above
+@item
+↓ : Below
+@item
+← : Left
+@item
+→ : Right
+@end itemize
+
+@item Flip
+Flip current window in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↔︎ : Left-Right
+@item
+↕︎ : Top-Down
+@end itemize
+
+@item Rotate
+Rotate windows in direction (only in GNU Emacs 31+)
+@itemize
+@item
+↻ : Clockwise
+@item
+↺ : Counter-clockwise
+@end itemize
+
+@item Transpose
+Transpose windows (only in GNU Emacs 31+)
+@end table
+
+Window management menu items are context sensitive so will only display if applicable.
 
 @node Main Menu Features
 @section Main Menu Features
@@ -1130,7 +1214,7 @@ Anju makes the following modifications to the menu bar @strong{Tools} menu:
 
 @table @asis
 @item Adds the “Macro Recorder” sub-menu
-Commands to create@comma{} run@comma{} edit@comma{} and debug  @ref{Macro Recorder Menu, , keyboard macros}.
+Commands to create@comma{} run@comma{} edit@comma{} and debug @ref{Macro Recorder Menu, , keyboard macros}.
 
 @item Adds global Org commands
 Provide general access to these commands
@@ -1189,7 +1273,40 @@ For experienced users@comma{} the ``Emacs Tutorial'' menu items can be removed v
 
 @cindex Window Management Features
 
-Window management via mouse interaction is provided for through the @ref{Mode Line Features, , mode line} and @ref{Context Menu Features, , context menu}. More detail is provided in those sections.
+Window management via mouse interaction is provided for through the @ref{Mode Line Features, , mode line} and @ref{Context Menu Window Management, , context menu}. More detail is provided in those sections.
+
+@node Mouse Binding Changes
+@section Mouse Binding Changes
+
+@cindex Mouse Binding Changes
+
+Anju makes the following changes to the default mouse bindings set in Emacs:
+
+@itemize
+@item
+Removes most bindings involving the middle mouse button (@kbd{<mouse-2>}).
+
+@item
+Removes mouse bindings related to secondary selection (@ref{Secondary Selection,,,emacs,}).
+
+@item
+Change selection and open behavior in application-like modes.
+
+By default@comma{} built-in Emacs modes treat their content as a hypertext document@comma{} where a single click @kbd{<mouse-1>} on a link is treated as an open action. This results in surprise for modes whose content is more akin to an application. For applications@comma{} a single-click  event is treated as a selection action and a double-click @kbd{<mouse-1>} event is treated as an open action.
+
+Modes reconfigured to support application-like behavior are:
+
+@itemize
+@item
+@code{dired-mode}
+@item
+@code{ibuffer-mode}
+@item
+@code{bookmark-bmenu-mode}
+@end itemize
+
+In addition@comma{} mark toggling is bound to @kbd{M-<mouse-1>} for modes which display a list of items.
+@end itemize
 
 @node Requirements
 @chapter Requirements
@@ -1293,6 +1410,7 @@ Customization options for the different areas Anju covers are detailed below.
 @vindex anju-reconfigure-main-menu-enable
 @vindex anju-help-menu-remove-emacs-tutorial
 @vindex anju-reconfigure-main-menu-hook
+@vindex anju-reconfigure-mouse-per-modes-enable
 
 Anju has a number of customizable variables that determine the behavior of @code{anju-init}. They are:
 
@@ -1306,7 +1424,27 @@ If @code{context-menu-functions} is previously set via @code{customize-variable}
 Enable Anju-defined bindings for the mode line.
 
 @item @code{anju-unset-legacy-mouse-bindings-enable}
-Remove bindings using @code{mouse-2}.
+Remove bindings using @code{mouse-2} and for secondary selection.
+
+@item @code{anju-reconfigure-mouse-per-modes-enable}
+Run mode-specific hooks to customize their mouse behavior.
+
+Anju distinguishes modes whose content is treated as a hypertext document with those whose content is more akin to an application. For the latter@comma{} a single-click @kbd{<mouse-1>} event is treated as a selection action and a double-click @kbd{<mouse-1>} event is treated as an open action.
+
+In addition@comma{} mark toggling is bound to @kbd{M-<mouse-1>}.
+
+Modes reconfigured to support the above distinction are:
+
+@itemize
+@item
+@code{dired-mode}
+@item
+@code{ibuffer-mode}
+@item
+@code{bookmark-bmenu-mode}
+@end itemize
+
+This variable is only evaluated if @code{anju-unset-legacy-mouse-bindings-enable} is non-nil.
 
 @item @code{anju-reconfigure-main-menu-enable}
 Top-level variable to reconfigure the main menu.
@@ -1315,10 +1453,10 @@ If @code{anju-reconfigure-main-menu-enable} is @code{t}@comma{} the following va
 
 @table @asis
 @item @code{anju-reconfigure-main-menu-hook}
-a list of functions@comma{} each modifying a menu of the main menu.
+A list of functions@comma{} each modifying a menu of the main menu.
 
 @item @code{anju-help-menu-remove-emacs-tutorial}
-control if the Emacs tutorial menu items are shown.
+Control if the Emacs tutorial menu items are shown.
 @end table
 @end table
 

@@ -91,6 +91,29 @@ nil and restart Emacs."
   :type 'boolean
   :group 'anju)
 
+(defcustom anju-reconfigure-mouse-per-modes-enable t
+  "If non-nil, run mode-specific hooks to customize their mouse behavior.
+
+Anju distinguishes modes whose content is treated as a hypertext
+document with those whose content is more akin to an application. For
+the latter, a single-click <mouse–1> event is treated as a selection
+action and a double-click <mouse–1> event is treated as an open action.
+
+Modes reconfigured to support the above distinction are:
+
+- `dired-mode'
+- `ibuffer-mode'
+- `bookmark-bmenu-mode'
+
+This variable is only evaluated when
+`anju-unset-legacy-mouse-bindings-enable' is non-nil. If both variables
+are non-nil, then the function `anju-modes-reconfigure-mouse' is run.
+
+To return to behavior that is not modified by Anju, set this value to
+nil and restart Emacs."
+  :type 'boolean
+  :group 'anju)
+
 (defcustom anju-buffer-list-filter-functions
   '((anju-buffer-list-project-filter . 7)
     (anju-buffer-list-compilation-filter . 3)
@@ -200,13 +223,30 @@ This command creates a new frame populated by CMD."
   (call-interactively cmd))
 
 (defun anju-utils--unset-legacy-mouse-bindings ()
-  "Unset Emacs legacy mouse keybindings."
+  "Unset Emacs legacy mouse keybindings.
+
+Mouse bindings for the following areas are removed:
+
+- Middle mouse button usage
+- Mode line bindings
+- Secondary selection"
+
+  ;; Remove middle mouse button bindings
   (keymap-global-unset "<mode-line> C-<mouse-2>" t)
   (keymap-global-unset "<vertical-scroll-bar> C-<mouse-2>" t)
   (keymap-global-unset "<horizontal-scroll-bar> C-<mouse-2>" t)
   (keymap-global-unset "<vertical-line> C-<mouse-2>" t)
   (keymap-global-unset "<right-divider> C-<mouse-2>" t)
   (keymap-global-unset "<bottom-divider> C-<mouse-2>" t)
+
+  ;; Remove secondary selection
+  (keymap-global-unset "M-<mouse-1>")
+  (keymap-global-unset "M-<drag-mouse-1>")  ; was mouse-set-secondary
+  (keymap-global-unset "M-<down-mouse-1>")  ; was mouse-drag-secondary
+  (keymap-global-unset "M-<mouse-2>")       ; was mouse-yank-secondary
+  (keymap-global-unset "M-<mouse-3>")       ; was mouse-secondary-save-then-kill
+
+  ;; Remove mode line bindings
   (keymap-global-unset "<mode-line> <mouse-2>" t)
   (keymap-global-unset "<mode-line> <mouse-3>" t)
   (keymap-global-unset "<mode-line> <double-mouse-1>" t)
